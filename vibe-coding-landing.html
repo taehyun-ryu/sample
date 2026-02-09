@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe Coding - 코딩의 새로운 감각</title>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-cyan: #00fff9;
+            --neon-pink: #ff006e;
+            --neon-purple: #8338ec;
+            --deep-blue: #0a0e27;
+            --dark-bg: #050816;
+            --accent-yellow: #ffbe0b;
+            --text-light: #f0f0f0;
+            --text-dim: #a0a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--deep-blue) 100%);
+        }
+
+        .animated-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(131, 56, 236, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 0, 110, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(0, 255, 249, 0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(5deg); }
+            66% { transform: translate(-20px, 20px) rotate(-5deg); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            backdrop-filter: blur(10px);
+            background: rgba(5, 8, 22, 0.7);
+            border-bottom: 1px solid rgba(0, 255, 249, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 1rem 5%;
+            background: rgba(5, 8, 22, 0.95);
+            box-shadow: 0 4px 30px rgba(0, 255, 249, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Righteous', cursive;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 5% 4rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            width: 100%;
+            text-align: center;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Righteous', cursive;
+            font-size: clamp(3rem, 8vw, 7rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from {
+                filter: drop-shadow(0 0 20px rgba(0, 255, 249, 0.5));
+            }
+            to {
+                filter: drop-shadow(0 0 40px rgba(255, 0, 110, 0.8));
+            }
+        }
+
+        .hero .subtitle {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            color: var(--text-dim);
+            margin-bottom: 3rem;
+            font-weight: 300;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .btn {
+            padding: 1.2rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            color: white;
+            box-shadow: 0 10px 40px rgba(255, 0, 110, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(255, 0, 110, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--neon-cyan);
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 249, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 255, 249, 0.1);
+            box-shadow: 0 0 30px rgba(0, 255, 249, 0.4);
+            transform: translateY(-3px);
+        }
+
+        /* Features Section */
+        .section {
+            padding: 8rem 5%;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-title h2 {
+            font-family: 'Righteous', cursive;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--accent-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(10, 14, 39, 0.6);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 249, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 20px 60px rgba(0, 255, 249, 0.2);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--neon-cyan);
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: var(--text-dim);
+            line-height: 1.8;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: linear-gradient(135deg, rgba(131, 56, 236, 0.1), rgba(255, 0, 110, 0.1));
+            border-top: 1px solid rgba(0, 255, 249, 0.2);
+            border-bottom: 1px solid rgba(0, 255, 249, 0.2);
+        }
+
+        .stats-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 4rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Righteous', cursive;
+            font-size: clamp(3rem, 5vw, 5rem);
+            background: linear-gradient(135deg, var(--neon-cyan), var(--accent-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Benefits Section */
+        .benefits-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .benefit-content h3 {
+            font-family: 'Righteous', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--neon-pink);
+        }
+
+        .benefit-content p {
+            color: var(--text-dim);
+            font-size: 1.2rem;
+            line-height: 2;
+            margin-bottom: 2rem;
+        }
+
+        .benefit-list {
+            list-style: none;
+        }
+
+        .benefit-list li {
+            padding: 1rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .benefit-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--neon-cyan);
+            font-size: 1.5rem;
+        }
+
+        .benefit-visual {
+            position: relative;
+            height: 400px;
+            background: rgba(10, 14, 39, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 249, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .code-preview {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: var(--text-light);
+            padding: 2rem;
+            text-align: left;
+        }
+
+        .code-line {
+            opacity: 0;
+            animation: typeLine 0.5s ease-out forwards;
+        }
+
+        .code-line:nth-child(1) { animation-delay: 0s; }
+        .code-line:nth-child(2) { animation-delay: 0.2s; }
+        .code-line:nth-child(3) { animation-delay: 0.4s; }
+        .code-line:nth-child(4) { animation-delay: 0.6s; }
+        .code-line:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes typeLine {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .keyword { color: var(--neon-pink); }
+        .function { color: var(--neon-cyan); }
+        .string { color: var(--accent-yellow); }
+        .comment { color: var(--text-dim); font-style: italic; }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(131, 56, 236, 0.2), rgba(255, 0, 110, 0.2));
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-family: 'Righteous', cursive;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-content p {
+            font-size: 1.3rem;
+            color: var(--text-dim);
+            margin-bottom: 3rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            border-top: 1px solid rgba(0, 255, 249, 0.1);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            color: var(--text-dim);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--neon-cyan);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--neon-cyan);
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 5%;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                height: 100vh;
+                width: 70%;
+                background: rgba(5, 8, 22, 0.98);
+                flex-direction: column;
+                padding: 5rem 2rem;
+                transition: right 0.3s ease;
+                backdrop-filter: blur(20px);
+            }
+
+            .nav-links.active {
+                right: 0;
+                box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .hero {
+                padding: 6rem 5% 3rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .section {
+                padding: 5rem 5%;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .benefits-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .benefit-visual {
+                height: 300px;
+            }
+
+            .code-preview {
+                font-size: 0.75rem;
+                padding: 1rem;
+            }
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">VIBE</a>
+            <button class="mobile-menu-toggle" id="menuToggle">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#features">특징</a></li>
+                <li><a href="#stats">통계</a></li>
+                <li><a href="#benefits">장점</a></li>
+                <li><a href="#cta">시작하기</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>VIBE CODING</h1>
+            <p class="subtitle">당신의 코딩 경험에 새로운 감각을 더하세요</p>
+            <div class="cta-buttons">
+                <a href="#cta" class="btn btn-primary">지금 시작하기</a>
+                <a href="#features" class="btn btn-secondary">자세히 알아보기</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="section">
+        <div class="section-title reveal">
+            <h2>왜 바이브 코딩인가?</h2>
+            <p>개발자를 위한 완전히 새로운 코딩 경험을 만나보세요</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3>초고속 개발</h3>
+                <p>직관적인 인터페이스와 스마트한 자동완성으로 개발 속도를 2배 향상시킵니다. 반복적인 작업은 줄이고 창의적인 코딩에 집중하세요.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <h3>아름다운 UI</h3>
+                <p>눈의 피로를 줄이는 최적화된 테마와 폰트로 장시간 코딩해도 편안합니다. 나만의 스타일로 커스터마이징 가능합니다.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>스마트 분석</h3>
+                <p>AI 기반 코드 분석으로 버그를 사전에 방지하고, 코드 품질을 실시간으로 개선합니다. 베스트 프랙티스를 자동으로 제안합니다.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔥</div>
+                <h3>실시간 협업</h3>
+                <p>팀원들과 실시간으로 코드를 공유하고 함께 작업하세요. 화상 통화와 채팅을 통한 원활한 커뮤니케이션을 지원합니다.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>무한 확장성</h3>
+                <p>수천 개의 플러그인과 확장 기능으로 나만의 완벽한 개발 환경을 구축하세요. 커뮤니티가 만든 다양한 툴을 활용할 수 있습니다.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>클라우드 통합</h3>
+                <p>어디서나 접속 가능한 클라우드 기반 환경으로 언제 어디서든 프로젝트를 이어갈 수 있습니다. 자동 백업과 버전 관리를 제공합니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="stats" class="section stats-section">
+        <div class="stats-grid">
+            <div class="stat-item reveal">
+                <span class="stat-number">50K+</span>
+                <span class="stat-label">활성 사용자</span>
+            </div>
+            <div class="stat-item reveal">
+                <span class="stat-number">2M+</span>
+                <span class="stat-label">작성된 코드 라인</span>
+            </div>
+            <div class="stat-item reveal">
+                <span class="stat-number">99.9%</span>
+                <span class="stat-label">가동률</span>
+            </div>
+            <div class="stat-item reveal">
+                <span class="stat-number">24/7</span>
+                <span class="stat-label">고객 지원</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="benefits" class="section">
+        <div class="benefits-container">
+            <div class="benefit-content reveal">
+                <h3>개발자 경험 최우선</h3>
+                <p>바이브 코딩은 개발자의 생산성과 행복을 최우선으로 생각합니다. 모든 기능은 실제 개발자들의 피드백을 바탕으로 설계되었습니다.</p>
+                <ul class="benefit-list">
+                    <li>직관적이고 깔끔한 인터페이스</li>
+                    <li>강력한 키보드 단축키 지원</li>
+                    <li>멀티 커서와 스마트 편집 기능</li>
+                    <li>Git 통합 및 버전 관리</li>
+                    <li>내장 터미널과 디버거</li>
+                </ul>
+            </div>
+            <div class="benefit-visual reveal">
+                <div class="code-preview">
+                    <div class="code-line"><span class="comment">// 바이브 코딩과 함께라면</span></div>
+                    <div class="code-line"><span class="keyword">const</span> <span class="function">createAwesome</span> = () => {</div>
+                    <div class="code-line">  <span class="keyword">return</span> <span class="string">"amazing code"</span>;</div>
+                    <div class="code-line">};</div>
+                    <div class="code-line"><span class="comment">// 코딩이 즐거워집니다 ✨</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="cta" class="section cta-section">
+        <div class="cta-content">
+            <h2>지금 바로 시작하세요</h2>
+            <p>수천 명의 개발자들이 이미 바이브 코딩으로 더 나은 코드를 작성하고 있습니다</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary">무료로 시작하기</a>
+                <a href="#" class="btn btn-secondary">데모 보기</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">소개</a>
+                <a href="#">문서</a>
+                <a href="#">블로그</a>
+                <a href="#">지원</a>
+                <a href="#">개인정보처리방침</a>
+            </div>
+            <p>&copy; 2026 Vibe Coding. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuToggle.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+        });
+
+        // Close mobile menu when clicking on a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuToggle.textContent = '☰';
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offsetTop = target.offsetTop - 80;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Scroll reveal animation
+        const revealElements = document.querySelectorAll('.reveal');
+        const featureCards = document.querySelectorAll('.feature-card');
+
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            
+            revealElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const revealPoint = 150;
+                
+                if (elementTop < windowHeight - revealPoint) {
+                    element.classList.add('active');
+                }
+            });
+
+            featureCards.forEach((card, index) => {
+                const cardTop = card.getBoundingClientRect().top;
+                const revealPoint = 150;
+                
+                if (cardTop < windowHeight - revealPoint) {
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Initial check
+
+        // Counter animation for stats
+        const animateCounters = () => {
+            const counters = document.querySelectorAll('.stat-number');
+            
+            counters.forEach(counter => {
+                const target = counter.textContent;
+                const isNumber = !isNaN(parseFloat(target));
+                
+                if (isNumber && !counter.classList.contains('animated')) {
+                    const value = parseFloat(target);
+                    const suffix = target.replace(/[0-9.]/g, '');
+                    const duration = 2000;
+                    const steps = 60;
+                    const stepValue = value / steps;
+                    let current = 0;
+                    
+                    const timer = setInterval(() => {
+                        current += stepValue;
+                        if (current >= value) {
+                            counter.textContent = target;
+                            clearInterval(timer);
+                            counter.classList.add('animated');
+                        } else {
+                            counter.textContent = Math.floor(current) + suffix;
+                        }
+                    }, duration / steps);
+                }
+            });
+        };
+
+        // Trigger counter animation when stats section is visible
+        const statsSection = document.getElementById('stats');
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        statsObserver.observe(statsSection);
+
+        // Parallax effect on hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero-content');
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+                hero.style.opacity = 1 - (scrolled / window.innerHeight) * 0.5;
+            }
+        });
+    </script>
+</body>
+</html>
